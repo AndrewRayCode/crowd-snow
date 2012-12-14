@@ -5,7 +5,7 @@ A real man's javascript snow library. No images. No IE support.
 
 ## Demo
 
-[Demo on jsFiddle](http://jsfiddle.net/delvarworld/vcex8/1/)
+[Demo on jsFiddle](http://jsfiddle.net/delvarworld/vcex8/2/)
 
 ## Usage
 
