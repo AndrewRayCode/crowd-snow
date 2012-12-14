@@ -1,5 +1,19 @@
 (function() {
 
+// <3 for mdn https://developer.mozilla.org/en-US/docs/CSS/CSS_animations/Detecting_CSS_animation_support
+var keyframeprefix = '',
+    domPrefixes = 'Webkit Moz O ms Khtml'.split(' '),
+    pfx  = '',
+    elm = document.createElement('div');
+
+for( var i = 0; i < domPrefixes.length; i++ ) {
+    if( elm.style[ domPrefixes[i] + 'AnimationName' ] !== undefined ) {
+        pfx = domPrefixes[ i ];
+        keyframeprefix = '-' + pfx.toLowerCase() + '-';
+        break;
+    }
+}
+
 var randInt = function(from, to) {
     return Math.floor(Math.random() * (to - from + 1) + from);
 };
@@ -37,27 +51,18 @@ $.fn.snow = function(options) {
         minOpacity = options.minOpacity || 50,
         maxOpacity = options.maxOpacity || 100,
         height = this.height(),
-        webkit = $.browser.webkit,
-        flakes = [];
+        flakes = [],
+        keyframes;
 
     var characters = ['&#10052;', '&#10053;', '&#10054;', '*'];
 
     // updates the Keyframe Height for the 'falling' animation in snowflakes.css so
     // snowflakes fall the full height of a page
-    var updateKeyframeHeight = function() {
-        var keyframes;
-        if (keyframes = findKeyframeAnimation('falling')) {
-            if (webkit) {
-                var newRule = '100% { -webkit-transform: translate3d(0,' +
-                    height + 'px,0) rotate(360deg); }';
-            } else if (keyframes.cssText.match(new RegExp('moz'))) {
-                var newRule = '-moz-transform: translate(0,' + height + 'px) rotate(360deg);';
-            }
-            keyframes.insertRule(newRule);
-        }
-    };
-
-    updateKeyframeHeight();
+    if (keyframes = findKeyframeAnimation('falling')) {
+        keyframes.insertRule(
+            '100% { ' + keyframeprefix + 'transform: translate3d(0,' + height + 'px,0) rotate(360deg); opacity:0; }'
+        );
+    }
 
     var i = count, size, css, origin;
     while (i--) {
@@ -72,17 +77,18 @@ $.fn.snow = function(options) {
             top: (-size - 20) + 'px'
         };
 
-        if(webkit) {
-            css['-webkit-transform-origin'] = origin + 'px ' + origin + 'px';
-            css['-webkit-animation-delay'] = (Math.random() * 10) + 's';
-        } else {
-            css['-moz-transform-origin'] = origin + 'px ' + origin + 'px';
-            css['-mox-animation-delay'] = (Math.random() * 10) + 's';
-        }
-        flakes.push($('<div></div>').html(characters[randInt(0, characters.length - 1)]).attr({
+        css[keyframeprefix + 'transform-origin'] = origin + 'px ' + origin + 'px';
+        css[keyframeprefix + 'animation-delay'] = (Math.random() * 10) + 's';
+        flakes.push($('<div></div>').html(
+            characters[randInt(0, characters.length - 1)]
+        ).attr({
             'class': 'snowflake'
         }).css(css).appendTo(this));
     }
+
+    this.on('webkitAnimationIteration animationIteration', function(e) {
+        $(e.target).css('left', randInt(0, 100) + '%');
+    });
 
     this.data('snow', {
         flakes: flakes

@@ -10,17 +10,26 @@
 .snowflake {
     position:absolute;
     color:#fff;
-    -webkit-animation:falling 4.7s linear 0 infinite;
-    -moz-animation:falling 4.7s linear 0 infinite;
+    -webkit-animation:falling 4.7s linear 0s infinite;
+    -moz-animation:falling 4.7s linear 0s infinite;
+    animation:falling 4.7s linear 0s infinite;
 }
 
 /* animation used for ALL snowflakes, 1000px will be updated by Snowflakes.create() to reflect true height of window */
 @-webkit-keyframes falling {
     0% { -webkit-transform:translate3d(0,0,0) rotate(0deg); }
+    95% { opacity:0.8; }
     100% { -webkit-transform:translate3d(0,0,0) rotate(360deg); }
 }
 
 @-moz-keyframes falling {
     0% { -moz-transform:translate3d(0,0,0) rotate(0deg); }
+    95% { opacity:0.8; }
     100% { -moz-transform:translate(0,0) rotate(360deg); }
+}
+
+@keyframes falling {
+    0% { transform:translate3d(0,0,0) rotate(0deg); }
+    95% { opacity:0.8; }
+    100% { transform:translate(0,0) rotate(360deg); }
 }

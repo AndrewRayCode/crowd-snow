@@ -47,11 +47,11 @@ maxDiameter
 
     The maximum snowflake diameter (translates to height / width / font-size)
 
-minOpacity
+minOpacity (0 to 100)
 
     Minimum flake opacity
 
-maxOpacity
+maxOpacity (0 to 100)
 
     Maximum flake opacity
 
